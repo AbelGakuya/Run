@@ -96,6 +96,7 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
 
         print("From 1st dev")
+        print("From 2nd dev")
 
 
         return view
