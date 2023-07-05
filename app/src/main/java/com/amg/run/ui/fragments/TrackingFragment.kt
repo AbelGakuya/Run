@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -36,6 +38,9 @@ import com.amg.run.other.Constants
 import com.amg.run.services.Polyline
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.OnMapsSdkInitializedCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
@@ -71,9 +76,17 @@ class TrackingFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         binding = FragmentTrackingBinding.inflate(inflater,container,false)
         val view = binding.root
         setHasOptionsMenu(true)
+
+
+//        MapsInitializer.initialize(requireContext(), MapsInitializer.Renderer.LATEST) {
+//            //println(it.name)
+//        }
+
+
         return view
     }
 
@@ -82,7 +95,9 @@ class TrackingFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.mapView.onCreate(savedInstanceState)
         binding.btnToggleRun.setOnClickListener {
            // toggleRun()
+           // moveCameraToUser()
             requestPermissions()
+
         }
 
         if (savedInstanceState != null){
@@ -100,6 +115,12 @@ class TrackingFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             endRunAndSaveToDb()
      //       sendCommandToService(ACTION_STOP_SERVICE)
         }
+
+
+
+
+
+
         binding.mapView.getMapAsync {
             map = it
             addAllPolyLines()
@@ -147,6 +168,7 @@ class TrackingFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun requestPermissions(){
         if (TrackingUtility.hasLocationPermissions(requireContext())){
+
             toggleRun()
         }
 
